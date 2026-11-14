@@ -1,1 +1,37 @@
- 
+#include <iostream>
+#include <random>
+#include <string>
+#include <fstream>
+#include <filesystem>
+#include <cstring>   // strerror
+#include <cerrno>    // errno
+
+int main()
+{
+    //we define the limits 0-100
+    //guess gets a random number
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 0;
+    int max = 2;
+
+    std::uniform_int_distribution<int>distrib(min,max);
+    //int guessPC=distrib(gen);
+
+
+    std::cout << "Working dir: " << std::filesystem::current_path() << '\n';
+
+    std::ifstream myfile(std::string(DATA_DIR) + "player1_grid.txt");
+    if (!myfile.is_open())
+    {
+        std::cout << "Unable to open file: " << std::strerror(errno) << '\n';
+        return 1;
+    }
+
+    std::string line;
+    while (std::getline(myfile, line))
+        std::cout << line << '\n';
+
+    return 0;
+}
+

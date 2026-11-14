@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include<cell.h>
+
 int main()
 {
 
