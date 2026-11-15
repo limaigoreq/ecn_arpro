@@ -7,6 +7,7 @@
 #include <vector>
 #include <random>
 #include <sstream>
+#include <algorithm>
 
 #include "cell.h"
 
@@ -96,6 +97,83 @@ public:
             std::cout <<this->PrintRow(row) << "     |    " << other.PrintRow(row) << std::endl;
         }
     }
+
+    // computer: random cell never targeted before (uses hist)
+    void ComputerRandomInput(int& row, int& col)
+    {
+        std::uniform_int_distribution<int> distrib(0, 9);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        do
+        {
+            row = distrib(gen);
+            col = distrib(gen);
+        } while (std::find(hist.begin(), hist.end(), 10 * row + col) != hist.end());
+
+        hist.push_back(10 * row + col);
+    }
+
+    // human: read two numbers between 0 and 9
+    void HumanInput(int& row, int& col)
+    {
+        while (true)
+        {
+            std::cout << name << ", enter target as: row col (e.g. 3 7): ";
+            if (std::cin >> row >> col && row >= 0 && row <= 9 && col >= 0 && col <= 9)
+                return;
+            if (std::cin.eof())                 // Ctrl+D: quit
+                std::exit(0);
+            std::cout << "Please type two numbers between 0 and 9.\n";
+            std::cin.clear();                   // reset cin after bad input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // drop the bad line
+        }
+    }
+
+    // returns true if 'other' has no boat left (game over)
+    bool Shoot(Player& other)
+    {
+        int row = 0;
+        int col = 0;
+
+        if (human)
+            HumanInput(row, col);
+        else
+            ComputerRandomInput(row, col);
+
+        std::cout << name << " fires at (" << row << ", " << col << "): ";
+
+        Cell& otherCell = other.cell(row, col);   // reference: we modify the real cell
+
+        if (otherCell.was_hit)                    // 1. already shot (water OR boat)
+        {
+            std::cout << "Already shot there!\n";
+            return false;
+        }
+
+        otherCell.was_hit = true;
+
+        if (otherCell.isEmpty())                  // 2. water
+        {
+            std::cout << "Miss!\n";
+        }
+        else                                      // 3. a boat piece, hit for the first time
+        {
+            unsigned int& alive = other.boats[otherCell.cell_value];
+            alive--;
+            if (alive == 0)
+                std::cout << "Sank a " << otherCell.cell_value << "!\n";
+            else
+                std::cout << "Hit a " << otherCell.cell_value << "!\n";
+        }
+
+        // game over if no boat piece is left
+        unsigned int total = 0;
+        for (const auto& boat : other.boats)
+            total += boat.second;
+        return total == 0;
+    }
+
+    void wins() const { std::cout << name << " wins!\n"; }
 
 
 };

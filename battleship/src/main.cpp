@@ -64,22 +64,32 @@ int main()
 
     //p.assignBoats();
 
-    Player p1("Player", true);
-    Player p2("Computer", false);
-    //Step 3
-    // std::cout << "=== p1 ===\n";
-    // printGrid(p1);
-    // countBoats(p1);
-    // std::cout << "\n=== p2 ===\n";
-    // printGrid(p2);
-    // countBoats(p2);
-    //Step5 : print both hits
-    for(int col = 0 ; col < 10 ; col++ ){//hit an entire line
-        p2.cell(4, col).was_hit = true;
-        p1.cell(4, col).was_hit = true;
-    }
+    // Player p1("Player", true);
+    // Player p2("Computer", false);
+    // //Step 3
+    // // std::cout << "=== p1 ===\n";
+    // // printGrid(p1);
+    // // countBoats(p1);
+    // // std::cout << "\n=== p2 ===\n";
+    // // printGrid(p2);
+    // // countBoats(p2);
+    // //Step5 : print both hits
+    // for(int col = 0 ; col < 10 ; col++ ){//hit an entire line
+    //     p2.cell(4, col).was_hit = true;
+    //     p1.cell(4, col).was_hit = true;
+    // }
 
-    p1.Print(p2);
+    // p1.Print(p2);
+
+    Player p1("Player" , true);              // human
+    Player p2("Computer", false);     // computer
+
+    while (true)
+    {
+        p1.Print(p2);
+        if (p1.Shoot(p2)) { p1.wins(); break; }
+        if (p2.Shoot(p1)) { p2.wins(); break; }
+    }
 
     return 0;
 }
