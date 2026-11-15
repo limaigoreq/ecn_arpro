@@ -66,20 +66,20 @@ int main()
 
     Player p1("Player", true);
     Player p2("Computer", false);
+    //Step 3
+    // std::cout << "=== p1 ===\n";
+    // printGrid(p1);
+    // countBoats(p1);
+    // std::cout << "\n=== p2 ===\n";
+    // printGrid(p2);
+    // countBoats(p2);
+    //Step5 : print both hits
+    for(int col = 0 ; col < 10 ; col++ ){//hit an entire line
+        p2.cell(4, col).was_hit = true;
+        p1.cell(4, col).was_hit = true;
+    }
 
-    std::cout << "=== p1 ===\n";
-    printGrid(p1);
-    countBoats(p1);
-
-    std::cout << "\n=== p2 ===\n";
-    printGrid(p2);
-    countBoats(p2);
-
-    //Test Step 4
-    // for each row 0..9:
-    //     for each col 0..9:
-    //         print p.cell(row, col).display(true) and a space
-    //         new line
+    p1.Print(p2);
 
     return 0;
 }

@@ -6,13 +6,14 @@
 #include <map>
 #include <vector>
 #include <random>
+#include <sstream>
 
 #include "cell.h"
 
 class Player{
     //Cell cell_;
     std::string name{"Default"};
-    bool human{false};
+    bool human{true};
     std::array<Cell, 100> grid ;
     std::map<char, unsigned int> boats{{'A', 5},{'C',4},{'D',3},{'S',3},{'M',2}};
     std::vector<unsigned int> hist{};
@@ -72,6 +73,27 @@ public:
         }else{
             std::cout<<"Error, this cell does not exist, returning grid[0] or cell(0,0)" <<std::endl;
             return this->grid[0];
+        }
+    }
+
+    std::string PrintRow(int row) const
+    {
+        std::stringstream printedRow;
+        printedRow << row << " ";
+        for(int col = 0 ; col<=9 ; col++)
+        {
+            printedRow << this->cell(row, col).display(this->human) <<" ";
+        }
+        return printedRow.str();
+    }
+
+    void Print (const Player& other)
+    {
+
+        std::cout <<"G 0 1 2 3 4 5 6 7 8 9 "<< "     |    " << "G 0 1 2 3 4 5 6 7 8 9 " << std::endl;
+        for(int row = 0 ; row <= 9 ; row++)
+        {
+            std::cout <<this->PrintRow(row) << "     |    " << other.PrintRow(row) << std::endl;
         }
     }
 
